@@ -41,6 +41,11 @@ def handle(client):
     print("Created or updated AH+TS")
     types = ['confirmed', 'deaths', 'recovered']
     country_sum = {}
+    world_sum = {
+        'confirmed': {},
+        'deaths': {},
+        'recovered': {}
+    }
     for t in types:
         for location in data[t]['locations']:
             country = location['country']
@@ -60,7 +65,10 @@ def handle(client):
                 datapoints.append((dt, value))
                 if not date in country_sum[country][t]:
                     country_sum[country][t][date] = 0
+                if not date in world_sum[t]:
+                    world_sum[t][date] = 0
                 country_sum[country][t][date] += value
+                world_sum[t][date] += value
 
             if province:
                 external_id = f"{country_external_id}_{province}_{t}"
@@ -76,6 +84,15 @@ def handle(client):
                 datapoints.append((dt, value))
             external_id = f"{country}_{t}"
             client.datapoints.insert(datapoints, external_id=external_id)
+    print("Created data points for countries")
+
+    for t, values in world_sum.items():
+        datapoints = []
+        for date, value in values.items():
+            dt = datetime.datetime.strptime(date, "%m/%d/%y")
+            datapoints.append((dt, value))
+        external_id = f"covid19_{t}"
+        client.datapoints.insert(datapoints, external_id=external_id)
     print("Created data points for countries")
 
 if __name__ == "__main__":
