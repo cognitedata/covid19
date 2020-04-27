@@ -33,11 +33,11 @@ def create_time_series(client, data):
 
 def handle(client):
     data = requests.get(url="http://coronavirus-tracker-api.herokuapp.com/all").json()
-    covid19 = retrieve_or_create_asset(client, Asset(name="Covid19", external_id="covid19"))
-    create_countries(client, data['confirmed']['locations'])
-    create_countries(client, data['deaths']['locations'])
-    create_countries(client, data['recovered']['locations'])
-    create_time_series(client, data)
+    # covid19 = retrieve_or_create_asset(client, Asset(name="Covid19", external_id="covid19"))
+    # create_countries(client, data['confirmed']['locations'])
+    # create_countries(client, data['deaths']['locations'])
+    # create_countries(client, data['recovered']['locations'])
+    # create_time_series(client, data)
     print("Created or updated AH+TS")
     types = ['confirmed', 'deaths', 'recovered']
     country_sum = {}
